@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cloudinary = require("cloudinary").v2;
@@ -7,14 +9,14 @@ app.use(express.json());
 
 //connexion à mon compte cloudinary
 cloudinary.config({
-  cloud_name: "dqgyaljvw",
-  api_key: "358988421727478",
-  api_secret: "HAJbvFoJCHiD1zvtpORJFyKAKhM",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
   secure: true,
 });
 
 //connexion à la BDD
-mongoose.connect("mongodb://localhost:27017/vinted");
+mongoose.connect(process.env.MONGODB_URI);
 
 //Import routes
 const userRoutes = require("./routes/user");
@@ -30,6 +32,6 @@ app.all("*", (req, res) => {
 //lancement du serveur
 // le port 3000 est seulement en local... on laissera le serveur définir le port en production
 //La valeur du port=3000 on la stock dans le fichier .env qui reste en local qui sera different de celui qu'on enverra en prod
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("Serverd started...");
 });

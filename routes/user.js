@@ -63,7 +63,7 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
     });
 
     //Gestion de l'image AVATAR
-    if (req.files.avatar) {
+    if (req.files?.avatar) {
       const pictureToUpload = req.files.avatar;
       const transformedPicture = convertToBase64(pictureToUpload);
 

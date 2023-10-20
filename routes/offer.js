@@ -59,23 +59,40 @@ router.post(
         //la response contiendra toutes les infos automatiquement populate
       });
 
-      //Tranformation de l'image en string avant save sur cloudinary
-      const pictureToUpload = req.files.picture;
-      const transformedPicture = convertToBase64(pictureToUpload);
-      //console.log(pictureToUpload);
+      if (req.files) {
+        //J'enregistre dans cloudinary mon image
+        //const offersFolder = "/vinted/offers/" + offer._id;
+        const offersFolder = await cloudinary.api.create_folder(
+          `/vinted/offers/${newOffer._id}`
+        );
+        if (req.files.picture) {
+          //Tranformation de l'image en string avant save sur cloudinary
+          const pictureToUpload = req.files.picture;
+          const transformedPicture = convertToBase64(pictureToUpload);
+          //console.log(pictureToUpload);
 
-      //J'enregistre dans cloudinary mon image
-      //const offersFolder = "/vinted/offers/" + offer._id;
-      const offersFolder = await cloudinary.api.create_folder(
-        `/vinted/offers/${newOffer._id}`
-      );
+          const pictureToSave = await cloudinary.uploader.upload(
+            transformedPicture,
+            { folder: offersFolder.path }
+          );
 
-      const pictureToSave = await cloudinary.uploader.upload(
-        transformedPicture,
-        { folder: offersFolder.path }
-      );
+          newOffer.product_image = pictureToSave;
+        }
+        if (req.files.pictures) {
+          const arrayOfPicturesUrl = [];
+          const picturesToUpload = req.files.pictures;
+          for (let i = 0; i < picturesToUpload.length; i++) {
+            const onePicture = picturesToUpload[i];
+            const onePictureToSave = await cloudinary.uploader.upload(
+              convertToBase64(onePicture),
+              { folder: offersFolder.path }
+            );
+            arrayOfPicturesUrl.push(onePictureToSave.secure_url);
+          }
 
-      newOffer.product_image = pictureToSave;
+          newOffer.product_pictures = arrayOfPicturesUrl;
+        }
+      }
 
       console.log("Saving Offer ...");
 

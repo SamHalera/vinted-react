@@ -61,21 +61,27 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
       hash,
       salt,
     });
+
     //Gestion de l'image AVATAR
-    const pictureToUpload = req.files.avatar;
-    const transformedPicture = convertToBase64(pictureToUpload);
+    if (req.files.avatar) {
+      const pictureToUpload = req.files.avatar;
+      const transformedPicture = convertToBase64(pictureToUpload);
 
-    // //Creation d'un folder pour stocker un avatar par utilisateur
-    const userFolder = await cloudinary.api.create_folder(
-      `/vinted/users/${newUser._id}`
-    );
-    console.log(userFolder);
-    const pictureToSave = await cloudinary.uploader.upload(transformedPicture, {
-      folder: userFolder.path,
-    });
+      // //Creation d'un folder pour stocker un avatar par utilisateur
+      const userFolder = await cloudinary.api.create_folder(
+        `/vinted/users/${newUser._id}`
+      );
+      console.log(userFolder);
+      const pictureToSave = await cloudinary.uploader.upload(
+        transformedPicture,
+        {
+          folder: userFolder.path,
+        }
+      );
 
-    // //on assigne l'image à l'avatar de l'utilisateur
-    newUser.account.avatar = pictureToSave;
+      // //on assigne l'image à l'avatar de l'utilisateur
+      newUser.account.avatar = pictureToSave;
+    }
 
     //Save l'utilisateur en base
     await newUser.save();
@@ -92,9 +98,14 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
 
 router.post("/user/login", async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
-
     const { email, password } = req.body;
+
+    if (!email && !password) {
+      return res.status(400).json({
+        massage: "email and password are required!",
+      });
+    }
+    const user = await User.findOne({ email: email });
 
     if (user.email !== email) {
       //console.log("user not");

@@ -15,7 +15,7 @@ const convertToBase64 = (file) => {
   return `data:${file.mimetype};base64,${file.data.toString("base64")}`;
 };
 
-//Sign Up
+//Sign Up creat new User
 router.post("/user/signup", fileUpload(), async (req, res) => {
   try {
     //Destructuring ==> on destructure un Objet et j'assigne la valeur de chaque clé à chaque variable créée dans les accolades

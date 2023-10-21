@@ -229,15 +229,16 @@ router.get("/offers", async (req, res) => {
     //Toute la logique pour filtrer la requete est faite dans la fonction utilitaire `../utils/filterOffer.js`
     const offers = await filterOffer(title, priceMin, priceMax, sort, page);
     console.log("Returning Offers ARRAY ...");
-    //const offersLength = await offers.find();
+
+    // notre offers sera toujours limité à 5 mais il faut donner la totalité des offres disponibles
+    // il faut utiliser la methode countDocument()
+    const offersLength = await Offer.countDocuments();
     console.log(offers.length);
     if (offers.length === 0) {
       res.status(200).json({ message: "Aucune offre n'a été trouvée!" });
     } else {
       res.status(200).json({
-        // notre offers sera toujours limité à 5 mais il faut donner la totalité des offres disponibles
-        // il faut utiliser la methode countDocument sur le find()
-        count: offers.length,
+        count: offersLength,
         offers: offers,
       });
     }

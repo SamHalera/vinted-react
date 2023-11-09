@@ -23,7 +23,7 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
 
     //si username et email ne sont pas données pas l'utilisateur
     //Il faudrait "sanitize" tout ce qui est envoyé par l'utilisateur !! ==> package `dompurify`
-    if (!username || !email) {
+    if (!username || !email || !password) {
       return res.status(400).json({ message: "All fields are required!" });
     }
 

@@ -79,7 +79,7 @@ const filterOffer = (title, priceMin, priceMax, sort, page, bool) => {
     .sort(objToSort)
     .skip(valueToSkip)
     .limit(valueToLimit)
-    .populate("owner");
+    .populate({ path: "owner", select: "account" });
 
   return offers;
 };

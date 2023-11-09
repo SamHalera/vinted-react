@@ -1,7 +1,7 @@
 const Offer = require("../models/Offer");
 
 //Filtrer les offres en fonction des paramatres donnés en query
-const filterOffer = (title, priceMin, priceMax, sort, page) => {
+const filterOffer = (title, priceMin, priceMax, sort, page, bool) => {
   //ObjToFind recoit title, priceMin et priceMax
   const objToFind = {};
 
@@ -35,7 +35,10 @@ const filterOffer = (title, priceMin, priceMax, sort, page) => {
   let valueToSkip = 0;
 
   //4 offres par page
-  const valueToLimit = 4;
+  let valueToLimit = 5;
+  if (bool) {
+    valueToLimit = 0;
+  }
 
   //si page est dans le query
   //par defaut la page à donner à sort et 1
@@ -44,7 +47,7 @@ const filterOffer = (title, priceMin, priceMax, sort, page) => {
     pageToSend = page;
   }
   // Je calcule skip en fonction du query page que j'ai reçu
-  valueToSkip = (pageToSend - 1) * 4; // 4 * pageToSend -4
+  valueToSkip = (pageToSend - 1) * 5; // 4 * pageToSend -4
 
   //Methode avant la correction --> ci-dessous
   // if (page) {
@@ -75,7 +78,8 @@ const filterOffer = (title, priceMin, priceMax, sort, page) => {
   const offers = Offer.find(objToFind)
     .sort(objToSort)
     .skip(valueToSkip)
-    .limit(valueToLimit);
+    .limit(valueToLimit)
+    .populate("owner");
 
   return offers;
 };

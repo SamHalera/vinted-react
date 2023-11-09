@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const User = require("../models/User");
 const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary").v2;
-
+const convertToBase64 = require("../utils/convertToBase64");
 const uid2 = require("uid2");
 const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
@@ -11,9 +11,9 @@ const encBase64 = require("crypto-js/enc-base64");
 const router = express.Router();
 
 //Je convert le buffer du req.files.picture en base64 pour le stocker sur cloudinary
-const convertToBase64 = (file) => {
-  return `data:${file.mimetype};base64,${file.data.toString("base64")}`;
-};
+// const convertToBase64 = (file) => {
+//   return `data:${file.mimetype};base64,${file.data.toString("base64")}`;
+// };
 
 //Sign Up creat new User
 router.post("/user/signup", fileUpload(), async (req, res) => {
@@ -24,9 +24,7 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
     //si username et email ne sont pas données pas l'utilisateur
     //Il faudrait "sanitize" tout ce qui est envoyé par l'utilisateur !! ==> package `dompurify`
     if (!username || !email) {
-      return res
-        .status(400)
-        .json({ message: "username and email are required!" });
+      return res.status(400).json({ message: "All fields are required!" });
     }
 
     //on check si le mail d'inscription existe déjà dans la base

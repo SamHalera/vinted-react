@@ -29,8 +29,17 @@ router.post(
       //à ce stade si mon middleware ne trouve pas de user ça return un message d'erreur 401
       // si non le script continue ci après
 
-      const { title, description, price, condition, city, brand, size, color } =
-        req.body;
+      const {
+        title,
+        description,
+        price,
+        condition,
+        city,
+        brand,
+        size,
+        color,
+        payment,
+      } = req.body;
 
       //une instance du model Offer, sans l'image que nous allons traiter par la suite
       const newOffer = new Offer({
@@ -52,6 +61,9 @@ router.post(
           },
           {
             EMPLACEMENT: city,
+          },
+          {
+            MODE_PAYEMENT: payment,
           },
         ],
         //product_image: pictureToSave,

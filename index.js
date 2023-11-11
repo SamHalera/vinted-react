@@ -44,7 +44,7 @@ app.get("/", async (req, res) => {
     console.log("Returning Offers ARRAY ...");
     const offersLength = await Offer.countDocuments();
     if (offers.length === 0) {
-      res.status(200).json({ message: "Aucune offre n'a été trouvée!" });
+      res.status(204).json({ message: "Aucune offre n'a été trouvée!" });
     } else {
       res.status(200).json({
         count: offersLength,

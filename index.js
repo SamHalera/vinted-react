@@ -43,14 +43,18 @@ app.get("/", async (req, res) => {
     );
     console.log("Returning Offers ARRAY ...");
     const offersLength = await Offer.countDocuments();
-    if (offers.length === 0) {
-      res.status(204).json({ message: "Aucune offre n'a été trouvée!" });
-    } else {
-      res.status(200).json({
-        count: offersLength,
-        offers: offers,
-      });
-    }
+    // if (offers.length === 0) {
+    //   res.status(204).json({ message: "Aucune offre n'a été trouvée!" });
+    // } else {
+    //   res.status(200).json({
+    //     count: offersLength,
+    //     offers: offers,
+    //   });
+    // }
+    res.status(200).json({
+      count: offersLength,
+      offers: offers,
+    });
   } catch (error) {
     console.log("Inside catch");
     res.status(500).json({ message: error.message });

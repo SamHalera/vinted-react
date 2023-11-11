@@ -5,9 +5,6 @@ const filterOffer = (title, priceMin, priceMax, sort, page, bool) => {
   //ObjToFind recoit title, priceMin et priceMax
   const objToFind = {};
 
-  //ObjToSort recoit sort
-  const objToSort = {};
-
   //On verifie quel query on a et on traite la requete en base en fonction de ces query
   //SI title est dans le query
   if (title) {
@@ -34,8 +31,10 @@ const filterOffer = (title, priceMin, priceMax, sort, page, bool) => {
   //recoit page
   let valueToSkip = 0;
 
-  //4 offres par page
+  //5 offres par page
   let valueToLimit = 5;
+
+  // if arg true (home page) we retrieve all offers with no limit
   if (bool) {
     valueToLimit = 0;
   }
@@ -64,14 +63,22 @@ const filterOffer = (title, priceMin, priceMax, sort, page, bool) => {
   //   }
   // }
 
+  //ObjToSort recoit sort
+  const objToSort = {};
   //si sort est dans le query
-  if (sort) {
-    if (sort !== "price-asc" && sort !== "price-desc") {
-      objToSort.product_price = "asc";
-    } else {
-      const sortQuery = sort.replace("price-", "");
-      objToSort.product_price = sortQuery;
-    }
+  // if (sort) {
+  //   if (sort !== "price-asc" && sort !== "price-desc") {
+  //     objToSort.product_price = "asc";
+  //   } else {
+  //     const sortQuery = sort.replace("price-", "");
+  //     objToSort.product_price = sortQuery;
+  //   }
+  // }
+  if (!sort || (sort !== "price-asc" && sort !== "price-desc")) {
+    objToSort.product_price = "asc";
+  } else {
+    const sortQuery = sort.replace("price-", "");
+    objToSort.product_price = sortQuery;
   }
 
   //requete mongoose avec des valeurs par defaut si jamais notre query est vide

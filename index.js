@@ -32,6 +32,7 @@ app.get("/", async (req, res) => {
   try {
     const { title, priceMin, priceMax, sort, page } = req.query;
 
+    //Retrieve offers = all offers or dipending on filters
     const offers = await filterOffer(
       title,
       priceMin,

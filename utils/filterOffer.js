@@ -31,8 +31,8 @@ const filterOffer = (title, priceMin, priceMax, sort, page, bool) => {
   //recoit page
   let valueToSkip = 0;
 
-  //5 offres par page
-  let valueToLimit = 5;
+  //10 offres par page
+  let valueToLimit = 10;
 
   // if arg true (home page) we retrieve all offers with no limit
   if (bool) {

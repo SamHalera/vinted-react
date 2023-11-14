@@ -1,4 +1,5 @@
 const express = require("express");
+const stripe = require("stripe")(process.env.SK_TEST);
 const Offer = require("../models/Offer");
 const User = require("../models/User");
 const fileUpload = require("express-fileupload");
@@ -39,6 +40,7 @@ router.post(
         size,
         color,
         payment,
+        exchange,
       } = req.body;
 
       //une instance du model Offer, sans l'image que nous allons traiter par la suite
@@ -65,10 +67,14 @@ router.post(
           {
             MODE_PAYEMENT: payment,
           },
+          {
+            ECHANGE: exchange,
+          },
         ],
         //product_image: pictureToSave,
         owner: req.user, // req.user contiendra que les infos demandées via les select de isAuthenticated. Mongoose mettre en base que l'ObecttId de user
         //la response contiendra toutes les infos automatiquement populate
+        soldOut: false,
       });
 
       if (req.files) {
@@ -273,6 +279,31 @@ router.get("/offers/:id", async (req, res) => {
       });
     }
     res.status(200).json(offer);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//BUY A PRODUCT
+router.post("/payment", async (req, res) => {
+  try {
+    const { stripeToken, name, price, productId } = req.body;
+    console.log(req.body);
+    const response = await stripe.charges.create({
+      amount: price * 100,
+      currency: "eur",
+      description: name,
+      source: stripeToken,
+    });
+    console.log(response.status);
+
+    const offer = await Offer.findByIdAndUpdate(
+      { _id: productId },
+      { soldOut: true }
+    );
+    console.log(offer);
+    await offer.save();
+    res.status(200).json({ response });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

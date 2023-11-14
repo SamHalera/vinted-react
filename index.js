@@ -21,6 +21,12 @@ cloudinary.config({
 //connect to DB
 mongoose.connect(process.env.MONGODB_URI);
 
+//Test slow request in order to test a front displaying spinner
+const addDelay = async (req, res, next) => {
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+  next();
+};
+// app.use(addDelay);
 //Import routes (for user and offer)
 const userRoutes = require("./routes/user");
 const offerRoutes = require("./routes/offer");

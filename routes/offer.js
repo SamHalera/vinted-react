@@ -297,12 +297,6 @@ router.post("/payment", async (req, res) => {
     });
     console.log(response.status);
 
-    const offer = await Offer.findByIdAndUpdate(
-      { _id: productId },
-      { soldOut: true }
-    );
-    console.log(offer);
-    await offer.save();
     res.status(200).json({ response });
   } catch (error) {
     res.status(500).json({ message: error.message });

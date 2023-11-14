@@ -48,32 +48,9 @@ const filterOffer = (title, priceMin, priceMax, sort, page, bool) => {
   // Je calcule skip en fonction du query page que j'ai reçu
   valueToSkip = (pageToSend - 1) * 5; // 4 * pageToSend -4
 
-  //Methode avant la correction --> ci-dessous
-  // if (page) {
-  //   //SI page est 0
-  //   if (page === "0") {
-  //     valueToSkip = 0;
-  //     valueToLimit = 0;
-  //   } else {
-  //     //trie les pages 4 offres par page
-  //     const nbParPage = 4;
-  //     //skip peut être calculé aussi = (n°page -1) * nbParPage
-  //     valueToSkip = page * nbParPage - nbParPage;
-  //     valueToLimit = nbParPage;
-  //   }
-  // }
-
   //ObjToSort recoit sort
   const objToSort = {};
-  //si sort est dans le query
-  // if (sort) {
-  //   if (sort !== "price-asc" && sort !== "price-desc") {
-  //     objToSort.product_price = "asc";
-  //   } else {
-  //     const sortQuery = sort.replace("price-", "");
-  //     objToSort.product_price = sortQuery;
-  //   }
-  // }
+
   if (!sort || (sort !== "price-asc" && sort !== "price-desc")) {
     objToSort.product_price = "asc";
   } else {
